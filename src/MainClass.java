@@ -43,10 +43,29 @@ public class MainClass {
 
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        JPasswordField passwordField = new JPasswordField(15);
 
-        // Eye button for password visibility
+        // Create a password panel to house both the password field and the eye button
+        JPanel passwordPanel = new JPanel(new GridBagLayout());
+        passwordPanel.setBackground(Color.WHITE);
+
+        JPasswordField passwordField = new JPasswordField(15);
         JButton eyeButton = createEyeButton(passwordField);
+
+        GridBagConstraints pGbc = new GridBagConstraints();
+        pGbc.fill = GridBagConstraints.HORIZONTAL;
+        pGbc.weightx = 1.0;
+        pGbc.insets = new Insets(0, 0, 0, 0);
+
+        // Add password field
+        pGbc.gridx = 0;
+        pGbc.gridy = 0;
+        pGbc.weightx = 1.0; // Allow the password field to take most of the space
+        passwordPanel.add(passwordField, pGbc);
+
+        // Add eye button
+        pGbc.gridx = 1;
+        pGbc.weightx = 0; // Eye button doesn't expand
+        passwordPanel.add(eyeButton, pGbc);
 
         JRadioButton adminButton = new JRadioButton("Admin");
         JRadioButton customerButton = new JRadioButton("Customer");
@@ -59,7 +78,7 @@ public class MainClass {
         JButton loginButton = new JButton("Log In");
         JButton createAccountSwitchButton = new JButton("Create New Account");
 
-        // Add components
+        // Add components to the login panel
         gbc.gridx = 0;
         gbc.gridy = 0;
         loginPanel.add(emailLabel, gbc);
@@ -70,10 +89,7 @@ public class MainClass {
         gbc.gridy = 1;
         loginPanel.add(passwordLabel, gbc);
         gbc.gridx = 1;
-        loginPanel.add(passwordField, gbc);
-
-        gbc.gridx = 2;
-        loginPanel.add(eyeButton, gbc);
+        loginPanel.add(passwordPanel, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -136,10 +152,28 @@ public class MainClass {
 
         // Input fields
         JTextField newEmailField = new JTextField(20);
-        JPasswordField newPasswordField = new JPasswordField(20);
+        JPasswordField newPasswordField = new JPasswordField(15);
 
         // Eye button for password visibility
+        JPanel passwordPanel = new JPanel(new GridBagLayout());
+        passwordPanel.setBackground(Color.WHITE);
+
         JButton eyeButton = createEyeButton(newPasswordField);
+
+        GridBagConstraints pGbc = new GridBagConstraints();
+        pGbc.fill = GridBagConstraints.HORIZONTAL;
+        pGbc.insets = new Insets(0, 0, 0, 0);
+
+        // Add password field to panel
+        pGbc.gridx = 0;
+        pGbc.gridy = 0;
+        pGbc.weightx = 1.0; // Expand password field
+        passwordPanel.add(newPasswordField, pGbc);
+
+        // Add eye button beside password field
+        pGbc.gridx = 1;
+        pGbc.weightx = 0; // No expansion for button
+        passwordPanel.add(eyeButton, pGbc);
 
         // Buttons
         JButton registerButton = new JButton("Register");
@@ -164,12 +198,7 @@ public class MainClass {
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.LINE_START;
-        createAccountPanel.add(newPasswordField, gbc);
-
-        // Add eye button beside password field
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        createAccountPanel.add(eyeButton, gbc);
+        createAccountPanel.add(passwordPanel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -207,16 +236,18 @@ public class MainClass {
     }
 
     private static JButton createEyeButton(JPasswordField passwordField) {
-        JButton eyeButton = new JButton("\uD83D\uDC41"); // Unicode for an eye symbol
-        eyeButton.setPreferredSize(new Dimension(50, 30));
+        JButton eyeButton = new JButton("\uD83D\uDC41"); // Unicode for eye
+        eyeButton.setPreferredSize(new Dimension(30, 20));
         eyeButton.setFocusable(false);
+        eyeButton.setBackground(Color.WHITE);
+        eyeButton.setBorder(null); // Remove border for a clean look
         eyeButton.addActionListener(new ActionListener() {
-            boolean showing = false;
+            private boolean showing = false;
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (showing) {
-                    passwordField.setEchoChar('*');
+                    passwordField.setEchoChar('*'); // Hide characters
                 } else {
                     passwordField.setEchoChar((char) 0); // Show characters
                 }
