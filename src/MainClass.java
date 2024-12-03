@@ -122,9 +122,11 @@ public class MainClass {
                 JOptionPane.showMessageDialog(loginPanel, "Email or Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (role.equals("Admin")) {
                 JOptionPane.showMessageDialog(loginPanel, "Admin logged in successfully:\nEmail: " + email, "Success", JOptionPane.INFORMATION_MESSAGE);
+                handleLoginSuccess(contentPanel, loginPanel);  // Switch to post-login interface
             } else if (role.equals("Customer")) {
                 if (verifyCustomer(email, password)) {
                     JOptionPane.showMessageDialog(loginPanel, "Customer logged in successfully:\nEmail: " + email, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    handleLoginSuccess(contentPanel, loginPanel);  // Switch to post-login interface
                 } else {
                     JOptionPane.showMessageDialog(loginPanel, "Invalid credentials. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -132,6 +134,94 @@ public class MainClass {
         });
 
         return loginPanel;
+    }
+
+    private static JPanel createPostLoginPanel(JPanel contentPanel) {
+        // Create panel for post-login interface
+        JPanel postLoginPanel = new JPanel();
+        postLoginPanel.setLayout(new BorderLayout());
+
+        // Top navigation bar with GridBagLayout
+        JPanel navPanel = new JPanel(new GridBagLayout());
+        navPanel.setBackground(new Color(173, 216, 230));  // Light blue background
+
+        // Create buttons
+        JButton searchButton = new JButton("Search");
+        JButton homeButton = new JButton("Home");
+        JButton accountButton = new JButton("Account");
+        JButton cartButton = new JButton("Cart"); // New "Cart" button
+
+        // Set same size for all buttons
+        Dimension buttonSize = new Dimension(200, 40); // Set your desired size here
+        searchButton.setPreferredSize(buttonSize);
+        homeButton.setPreferredSize(buttonSize);
+        accountButton.setPreferredSize(buttonSize);
+        cartButton.setPreferredSize(buttonSize); // Apply size to "Cart" button
+
+        // Define GridBag constraints
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1; // Allow buttons to take equal space
+        gbc.insets = new Insets(5, 5, 5, 5); // Add space between buttons
+
+        // Add buttons to navPanel with GridBagLayout
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        navPanel.add(searchButton, gbc);
+
+        gbc.gridx = 1;
+        navPanel.add(homeButton, gbc);
+
+        gbc.gridx = 2;
+        navPanel.add(accountButton, gbc);
+
+        gbc.gridx = 3; // Add "Cart" button to the navigation bar
+        navPanel.add(cartButton, gbc);
+
+        // Content area for Home, Account, Search, and Cart panels
+        JPanel contentArea = new JPanel(new CardLayout());
+        contentArea.setBackground(Color.WHITE);
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.add(new JLabel("Search for items"));
+
+        JPanel homePanel = new JPanel();
+        homePanel.add(new JLabel("Welcome to Home"));
+
+        JPanel accountPanel = new JPanel();
+        accountPanel.add(new JLabel("Account Information"));
+
+        JPanel cartPanel = new JPanel(); // New "Cart" panel
+        cartPanel.add(new JLabel("Your Cart is empty"));
+
+        contentArea.add(searchPanel, "Search");
+        contentArea.add(homePanel, "Home");
+        contentArea.add(accountPanel, "Account");
+        contentArea.add(cartPanel, "Cart"); // Add "Cart" panel to the content area
+
+        // Show home panel by default
+        CardLayout contentLayout = (CardLayout) contentArea.getLayout();
+        contentLayout.show(contentArea, "Home");
+
+        // Button actions
+        searchButton.addActionListener(e -> contentLayout.show(contentArea, "Search"));
+        homeButton.addActionListener(e -> contentLayout.show(contentArea, "Home"));
+        accountButton.addActionListener(e -> contentLayout.show(contentArea, "Account"));
+        cartButton.addActionListener(e -> contentLayout.show(contentArea, "Cart")); // Switch to "Cart" panel
+
+        // Add panels to the post-login panel
+        postLoginPanel.add(navPanel, BorderLayout.NORTH);  // Navigation bar on top
+        postLoginPanel.add(contentArea, BorderLayout.CENTER);  // Content area in the center
+
+        return postLoginPanel;
+    }
+
+    private static void handleLoginSuccess(JPanel contentPanel, JPanel loginPanel) {
+        // Once login is successful, hide the login panel and show the post-login panel
+        CardLayout cl = (CardLayout) contentPanel.getLayout();
+        JPanel postLoginPanel = createPostLoginPanel(contentPanel);
+        contentPanel.add(postLoginPanel, "PostLoginPanel");
+        cl.show(contentPanel, "PostLoginPanel");
     }
 
     private static JPanel createAccountPanel(JPanel contentPanel) {
@@ -308,4 +398,5 @@ public class MainClass {
         }
         return false;
     }
+
 }
