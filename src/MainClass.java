@@ -241,7 +241,7 @@ public class MainClass {
             return false;
         }
     }
-
+/*
     private static boolean verifyCustomer(String email, String password) {
         try {
             File file = new File(ACCOUNT_FILE);
@@ -262,5 +262,5 @@ public class MainClass {
             e.printStackTrace();
         }
         return false;
-    }
+    }*/
 }
