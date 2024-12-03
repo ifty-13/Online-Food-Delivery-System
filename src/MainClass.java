@@ -11,7 +11,7 @@ public class MainClass {
     private static final String ACCOUNT_FILE = "accounts.txt";
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Login Interface");
+        JFrame frame = new JFrame("Welcome");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 350);
         frame.setLayout(new BorderLayout());
