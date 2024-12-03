@@ -144,6 +144,9 @@ public class MainClass {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         // Labels
+        JLabel newNameLabel = new JLabel("Enter Name:");
+        newNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
         JLabel newEmailLabel = new JLabel("Enter New Email:");
         newEmailLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -151,6 +154,7 @@ public class MainClass {
         newPasswordLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
         // Input fields
+        JTextField newNameField = new JTextField(20);
         JTextField newEmailField = new JTextField(20);
         JPasswordField newPasswordField = new JPasswordField(15);
 
@@ -183,40 +187,51 @@ public class MainClass {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.LINE_END;
-        createAccountPanel.add(newEmailLabel, gbc);
+        createAccountPanel.add(newNameLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.LINE_START;
-        createAccountPanel.add(newEmailField, gbc);
+        createAccountPanel.add(newNameField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
-        createAccountPanel.add(newPasswordLabel, gbc);
+        createAccountPanel.add(newEmailLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.LINE_START;
-        createAccountPanel.add(passwordPanel, gbc);
+        createAccountPanel.add(newEmailField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.LINE_END;
+        createAccountPanel.add(newPasswordLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        createAccountPanel.add(passwordPanel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.CENTER;
         createAccountPanel.add(registerButton, gbc);
 
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         createAccountPanel.add(backToLoginButton, gbc);
 
         // Register button action
         registerButton.addActionListener(e -> {
+            String name = newNameField.getText();
             String newEmail = newEmailField.getText();
             String newPassword = new String(newPasswordField.getPassword());
 
-            if (newEmail.isEmpty() || newPassword.isEmpty()) {
-                JOptionPane.showMessageDialog(createAccountPanel, "Email or Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            if (name.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(createAccountPanel, "All fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (registerCustomer(newEmail, newPassword)) {
+                if (registerCustomer(name, newEmail, newPassword)) {
                     JOptionPane.showMessageDialog(createAccountPanel, "Account created successfully:\nEmail: " + newEmail, "Success", JOptionPane.INFORMATION_MESSAGE);
                     CardLayout cl = (CardLayout) contentPanel.getLayout();
                     cl.show(contentPanel, "LoginPanel");
@@ -257,13 +272,13 @@ public class MainClass {
         return eyeButton;
     }
 
-    private static boolean registerCustomer(String email, String password) {
+    private static boolean registerCustomer(String name, String email, String password) {
         try {
             if (verifyCustomer(email, null)) {
                 return false;
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(ACCOUNT_FILE, true));
-            writer.write(email + "," + password);
+            writer.write(name + "," + email + "," + password); // Save name, email, and password
             writer.newLine();
             writer.close();
             return true;
@@ -282,15 +297,14 @@ public class MainClass {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String[] account = scanner.nextLine().split(",");
-                if (account[0].equals(email)) {
-                    if (password == null || account[1].equals(password)) {
+                if (account[1].equals(email)) { // Check email
+                    if (password == null || account[2].equals(password)) { // Check password
                         return true;
                     }
                 }
             }
             scanner.close();
         } catch (IOException e) {
-            e.printStackTrace();
         }
         return false;
     }
