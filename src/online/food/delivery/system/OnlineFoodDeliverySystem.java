@@ -1,10 +1,7 @@
 
 package online.food.delivery.system;
 
-/**
- *
- * @author W.C
- */
+
 public class OnlineFoodDeliverySystem {
 
     /**
