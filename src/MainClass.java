@@ -378,25 +378,26 @@ public class MainClass {
         }
     }
 
-    private static boolean verifyCustomer(String email, String password) {
-        try {
-            File file = new File(ACCOUNT_FILE);
-            if (!file.exists()) {
-                return false;
-            }
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String[] account = scanner.nextLine().split(",");
-                if (account[1].equals(email)) { // Check email
-                    if (password == null || account[2].equals(password)) { // Check password
-                        return true;
-                    }
-                }
-            }
-            scanner.close();
-        } catch (IOException e) {
+private static boolean verifyCustomer(String emailOrUsername, String password) {
+    try {
+        File file = new File(ACCOUNT_FILE);
+        if (!file.exists()) {
+            return false;
         }
-        return false;
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNextLine()) {
+            String[] account = scanner.nextLine().split(",");
+            if ((account[1].equals(emailOrUsername) || account[0].equals(emailOrUsername)) && account[2].equals(password)) {
+                return true; // Match found
+            }
+        }
+        scanner.close();
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+    return false;
+}
+
+
 
 }
