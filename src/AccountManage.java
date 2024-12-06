@@ -1,13 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+public class AccountManager {
+    private final DatabaseManager dbManager;
 
-/**
- *
- * @author thona
- */
-public class AccountManage {
-    
+    public AccountManager() {
+        dbManager = new DatabaseManager();
+    }
+
+    public boolean register(String name, String email, String password) {
+        return dbManager.registerCustomer(name, email, password);
+    }
+
+    public boolean login(String email, String password) {
+        return dbManager.verifyCustomer(email, password);
+    }
 }
