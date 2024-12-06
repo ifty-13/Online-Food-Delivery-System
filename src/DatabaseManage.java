@@ -8,6 +8,6 @@
  *
  * @author thona
  */
-public class DatabaseManager {
+public class DatabaseManage {
     
 }
