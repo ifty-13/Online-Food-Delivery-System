@@ -1,7 +1,8 @@
 import java.sql.*;
 
 public class DatabaseManager {
-    private static final String DB_URL = "jdbc:sqlite:accounts.db";
+   private static final String DB_URL = "jdbc:sqlite:C:/path/to/your/project/accounts.db";
+
 
     public DatabaseManager() {
         createAccountTable();
